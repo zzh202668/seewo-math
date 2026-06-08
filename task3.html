@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>探究任务3：矩形种植区的过道宽度问题</title>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 15px;
+            color: #4a5568;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 99px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: #48bb78;
+            width: 75%;
+            transition: width 0.4s;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 22px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 5px solid #4299e1;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .guide {
+            background: #f0f7ff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+            color: #2c5282;
+            line-height: 1.6;
+            border-left: 3px solid #4299e1;
+        }
+
+        .question {
+            background: #fffbf2;
+            padding: 20px;
+            border-radius: 10px;
+            line-height: 1.8;
+            font-size: 15px;
+            margin-bottom: 16px;
+            border: 1px solid #fddba8;
+        }
+
+        .num {
+            display: inline-block;
+            min-width: 32px;
+            text-align: center;
+            padding: 4px 8px;
+            margin: 0 2px;
+            background: #fff;
+            border: 2px solid #f6ad55;
+            border-radius: 6px;
+            color: #dd6b20;
+            font-weight: bold;
+            cursor: text;
+            user-select: none;
+            transition: border 0.2s;
+        }
+
+        .num:focus {
+            outline: none;
+            border-color: #ed8936;
+            background: #fff8e6;
+        }
+
+        .think-box {
+            margin: 16px 0;
+        }
+
+        .think-box textarea {
+            width: 100%;
+            height: 100px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+        }
+
+        .btn {
+            padding: 9px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-blue {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-blue:hover {
+            background: #3182ce;
+        }
+
+        .btn-green {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-green:hover {
+            background: #38a169;
+        }
+
+        .btn-orange {
+            background: #ed8936;
+            color: white;
+        }
+
+        .btn-orange:hover {
+            background: #dd6b20;
+        }
+
+        .answer {
+            margin-top: 18px;
+            padding: 16px;
+            background: #f7fafc;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.7;
+            border: 1px solid #e2e8f0;
+            z-index: 1;
+        }
+
+        .answer strong {
+            color: #e53e3e;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="header">
+        <h1>一元二次方程探究式学习任务单 - 探究任务3</h1>
+        <p>基于实际问题 · 理解核心知识点 · AI辅助探究学习</p>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+    </div>
+
+    <div class="card" id="task3">
+        <div class="card-title">探究任务3：矩形种植区的过道宽度问题</div>
+        <div class="guide">
+            💡 <strong>知识点引导</strong>：将几何面积问题转化为一元二次方程，掌握“判别式判断方案可行性”的方法，理解方程的解需要符合实际意义（正数、合理范围）。<br>
+            ✏️ 修改种植区面积数值，分析方案是否始终可行。
+        </div>
+        <div class="question" id="q3">
+            班级计划在花架旁修建一个矩形种植区，原计划长<span class="num" contenteditable="true" data-task="3" data-index="0">10</span>米且宽<span class="num" contenteditable="true" data-task="3" data-index="1">6</span>米。现要在种植区四周留出宽度相同的过道，设过道的宽度为x米。
+            <br><br>
+            (1) 若种植区的实际面积为<span class="num" contenteditable="true" data-task="3" data-index="2">32</span>平方米，列出关于x的一元二次方程；<br>
+            (2) 通过计算根的判别式，判断该方案是否可行；若可行，求出过道的宽度；若不可行，请说明理由。
+        </div>
+        <div class="think-box">
+            <textarea placeholder="💭 思考记录：
+1. 如何用x表示种植区的实际长和宽？
+2. 判别式≥0就一定有符合实际的解吗？为什么？
+3. 过道宽度的取值有什么限制条件？"></textarea>
+        </div>
+        <button class="btn btn-blue" id="ansBtn3">查看答案与解析</button>
+        <button class="btn btn-green" onclick="saveTask(3)">保存探究笔记</button>
+        <button class="btn-orange btn" onclick="captureTask(3)">📷 截图提交作业</button>
+        <div class="answer" id="answer3"></div>
+    </div>
+</div>
+
+<script>
+    function formatNumber(n) {
+        if (isNaN(n) || !isFinite(n) || n === '') return 0;
+        return Math.round(Number(n) * 100) / 100;
+    }
+
+    function getTaskNumbers(taskId) {
+        const nums = [];
+        document.querySelectorAll(`.num[data-task="${taskId}"]`).forEach(el => {
+            nums.push(formatNumber(el.innerText.trim()));
+        });
+        return nums;
+    }
+
+    function showAnswer(taskId) {
+        if (showAnswer.lock) return;
+        showAnswer.lock = true;
+        
+        document.querySelectorAll('.num').forEach(el => el.blur());
+        
+        const answerBox = document.getElementById(`answer${taskId}`);
+        if (!answerBox) {
+            showAnswer.lock = false;
+            return;
+        }
+        answerBox.style.display = 'block';
+        answerBox.innerHTML = '<div style="color:#9f7aea;">🔄 正在计算答案...</div>';
+
+        setTimeout(() => {
+            const nums = getTaskNumbers(taskId);
+            let html = '', tip = '';
+
+            if (taskId === 3) {
+                const [len, wid, area] = nums;
+                const a = 4, b = -2*(len+wid), c = len*wid - area;
+                const delta = formatNumber(b*b - 4*a*c);
+                let feasible = false, width = '';
+                
+                if (delta >= 0) {
+                    const x1 = formatNumber((-b + Math.sqrt(delta))/(2*a));
+                    const x2 = formatNumber((-b - Math.sqrt(delta))/(2*a));
+                    const valid = [];
+                    if (x1>0 && x1<wid/2) valid.push(x1);
+                    if (x2>0 && x2<wid/2) valid.push(x2);
+                    width = valid.join(' 或 ') || '无符合实际意义的解';
+                    feasible = valid.length > 0;
+                }
+
+                html = `<strong>【探究任务3 答案与解析】</strong><br><br>
+                (1) 实际长：(${len}−2x)米，实际宽：(${wid}−2x)米<br>
+                列方程：(${len}−2x)(${wid}−2x) = ${area}<br>
+                整理：4x² − ${formatNumber(2*(len+wid))}x + ${formatNumber(len*wid - area)} = 0<br><br>
+                (2) 判别式Δ = ${delta}<br>
+                方案${feasible ? '✅ 可行' : '❌ 不可行'}<br>
+                ${feasible ? `过道宽度：${width} 米` : '理由：无符合实际意义的正数解（宽度需>0且<宽的一半）'}`;
+                tip = "📚 核心知识点：几何问题中，方程解需满足实际意义（正数、合理范围），判别式≥0只是必要条件而非充分条件。";
+            }
+
+            answerBox.innerHTML = html + `<br><br>${tip}`;
+            showAnswer.lock = false;
+        }, 100);
+    }
+
+    function saveTask(taskId) {
+        const textarea = document.querySelector(`#task${taskId} textarea`);
+        const content = textarea.value.trim();
+        if (!content) {
+            alert('请先填写思考记录再保存！');
+            return;
+        }
+        const key = `math_task_${taskId}`;
+        localStorage.setItem(key, content);
+        alert(`✅ 任务${taskId}笔记已保存！`);
+    }
+
+    function captureTask(taskId) {
+        saveTask(taskId);
+        const taskEl = document.getElementById(`task${taskId}`);
+        html2canvas(taskEl, { scale: 2, useCORS: true }).then(canvas => {
+            const a = document.createElement('a');
+            a.download = `探究任务${taskId}_${new Date().getTime()}.png`;
+            a.href = canvas.toDataURL('image/png');
+            a.click();
+            alert(`📸 任务${taskId}截图已下载！`);
+        }).catch(() => alert('截图失败，请重试！'));
+    }
+
+    window.onload = function() {
+        document.getElementById('ansBtn3').addEventListener('click', () => showAnswer(3));
+        document.querySelectorAll('.num').forEach(el => {
+            el.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    el.blur();
+                }
+            });
+        });
+    };
+</script>
+</body>
+</html>

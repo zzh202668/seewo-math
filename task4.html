@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>探究任务4：AI辅助 · 自主生成同类探究题</title>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 15px;
+            color: #4a5568;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 99px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: #48bb78;
+            width: 100%;
+            transition: width 0.4s;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 22px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 5px solid #4299e1;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .guide {
+            background: #f0f7ff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+            color: #2c5282;
+            line-height: 1.6;
+            border-left: 3px solid #4299e1;
+        }
+
+        .question {
+            background: #fffbf2;
+            padding: 20px;
+            border-radius: 10px;
+            line-height: 1.8;
+            font-size: 15px;
+            margin-bottom: 16px;
+            border: 1px solid #fddba8;
+        }
+
+        .think-box {
+            margin: 16px 0;
+        }
+
+        .think-box textarea {
+            width: 100%;
+            height: 100px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+        }
+
+        .input-box {
+            margin: 16px 0;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .btn {
+            padding: 9px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-purple {
+            background: #9f7aea;
+            color: white;
+        }
+
+        .btn-purple:hover {
+            background: #805ad5;
+        }
+
+        .btn-green {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-green:hover {
+            background: #38a169;
+        }
+
+        .btn-orange {
+            background: #ed8936;
+            color: white;
+        }
+
+        .btn-orange:hover {
+            background: #dd6b20;
+        }
+
+        .answer {
+            margin-top: 18px;
+            padding: 16px;
+            background: #f7fafc;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.7;
+            border: 1px solid #e2e8f0;
+            z-index: 1;
+            min-height: 120px;
+        }
+
+        .answer strong {
+            color: #e53e3e;
+        }
+
+        .finish {
+            text-align: center;
+            padding: 25px;
+            background: #f0fff4;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .finish h3 {
+            color: #22543d;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="header">
+        <h1>一元二次方程探究式学习任务单 - 探究任务4</h1>
+        <p>基于实际问题 · 理解核心知识点 · AI辅助探究学习</p>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+    </div>
+
+    <div class="card" id="task4">
+        <div class="card-title">探究任务4：AI辅助 · 自主生成同类探究题</div>
+        <div class="guide">
+            💡 <strong>知识点引导</strong>：基于前面3个实际问题的模型，自主设计场景，利用AI生成同类题目，深化对“一元二次方程+判别式”核心知识点的理解。<br>
+            ✏️ 参考模板：购物问题/几何面积问题/工程问题 + 单价/长度/效率 + 总金额/总面积/总工作量。
+        </div>
+        <div class="question">
+            请在下方输入你想生成的题目场景（参考：班级购买文具、矩形花坛面积、打印店打印资料等），点击生成按钮，AI将为你创建一道<strong>包含判别式应用的一元二次方程探究题</strong>。
+        </div>
+        <div class="input-box">
+            <input type="text" id="aiPrompt" placeholder="例如：班级购买笔记本，总金额50元，数量与单价成一次函数关系">
+        </div>
+        <div class="think-box">
+            <textarea placeholder="💭 我的自主探究：
+1. AI生成的题目中，我需要列什么方程？
+2. 如何用判别式判断解的个数/方案可行性？
+3. 这道题和前面的3个探究任务有什么相同的知识点？"></textarea>
+        </div>
+        <button class="btn btn-purple" id="aiGenBtn">🧠 AI生成同类探究题</button>
+        <button class="btn btn-green" onclick="saveTask(4)">保存探究笔记</button>
+        <button class="btn-orange btn" onclick="captureTask(4)">📷 截图提交作业</button>
+        <div class="answer" id="answer4" style="display: block;"></div>
+    </div>
+
+    <div class="finish">
+        <h3>✅ 恭喜你完成全部探究学习任务！</h3>
+        <p>你已掌握“一元二次方程列写+判别式应用”核心知识点，可截图提交全部探究笔记。</p>
+    </div>
+</div>
+
+<script>
+    // 随机整数生成函数
+    function randInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // 生成随机探究题核心逻辑
+    function generateAITask() {
+        const prompt = document.getElementById('aiPrompt').value.trim();
+        const answerBox = document.getElementById('answer4');
+        
+        if (!prompt) {
+            alert('请输入题目场景（例如：班级购买文具、矩形花坛面积等）！');
+            answerBox.innerHTML = '<span style="color:red">请先输入有效的应用场景！</span>';
+            return;
+        }
+
+        answerBox.innerHTML = '<div style="color:#9f7aea;">🔄 正在生成探究题，请稍等...</div>';
+
+        setTimeout(() => {
+            let html = "";
+            // 随机选择题型：1=购物类 2=几何面积类
+            const type = randInt(1, 2);
+
+            if (type === 1) {
+                // 购物模型：x*(a - kx) = b
+                const a = randInt(10, 22);
+                const k = randInt(1, 3);
+                const b = randInt(12, 45);
+                const A = k;
+                const B = -a;
+                const C = b;
+                const delta = B*B - 4*A*C;
+
+                html = `<strong>🧠 AI生成的探究题（场景：${prompt}）</strong><br><br>
+                题目：${prompt}，若每件商品单价为x元，则可购买(${a}−${k}x)件，总共花费${b}元。<br><br>
+                (1) 列出关于x的一元二次方程，并整理为一般形式；<br>
+                (2) 计算根的判别式Δ，判断方程有几个实数解；<br>
+                (3) 结合实际意义说明该购买方案是否可行。<br><br>
+                <hr style="border:1px solid #e2e8f0; margin:10px 0;">
+                <strong>参考解析：</strong><br>
+                列方程：x(${a}−${k}x) = ${b}<br>
+                一般形式：${A}x² ${B >= 0 ? '+' : ''}${B}x + ${C} = 0<br>
+                判别式Δ = ${B}² − 4×${A}×${C} = ${delta}<br>
+                结论：${delta > 0 ? 'Δ>0，方程有两个不相等实数解，存在两种可行购买方案' : delta === 0 ? 'Δ=0，方程有两个相等实数解，只有一种可行购买方案' : 'Δ<0，方程无实数解，该购买方案不可行'}`;
+            } else {
+                // 几何模型：矩形留过道 (L-2x)(W-2x)=S
+                const L = randInt(9, 16);
+                const W = randInt(5, 10);
+                const S = randInt(18, 48);
+                const A = 4;
+                const B = -2 * (L + W);
+                const C = L * W - S;
+                const delta = B*B - 4*A*C;
+
+                html = `<strong>🧠 AI生成的探究题（场景：${prompt}）</strong><br><br>
+                题目：${prompt}，矩形区域长${L}米，宽${W}米，四周留出等宽的过道，设过道宽度为x米，实际使用面积为${S}平方米。<br><br>
+                (1) 列出关于x的一元二次方程；<br>
+                (2) 计算判别式Δ，判断该设计方案是否可行；若可行，说明过道宽度的取值范围。<br><br>
+                <hr style="border:1px solid #e2e8f0; margin:10px 0;">
+                <strong>参考解析：</strong><br>
+                实际长：(${L}−2x)米，实际宽：(${W}−2x)米<br>
+                列方程：(${L}−2x)(${W}−2x) = ${S}<br>
+                一般形式：${A}x² ${B >= 0 ? '+' : ''}${B}x + ${C} = 0<br>
+                判别式Δ = ${delta}<br>
+                结论：${delta > 0 ? 'Δ>0，方程有两个不等实数解，需进一步判断解是否符合过道宽度的实际范围（x>0且x<W/2）' : delta === 0 ? 'Δ=0，方程有一个实数解，设计方案可行' : 'Δ<0，方程无实数解，该设计方案不可行'}`;
+            }
+
+            answerBox.innerHTML = html + `<br><br><strong>核心知识点：</strong>判别式Δ=b²-4ac是判断一元二次方程解的个数的核心工具，需结合实际场景筛选有效解。`;
+        }, 300);
+    }
+
+    function saveTask(taskId) {
+        const textarea = document.querySelector(`#task${taskId} textarea`);
+        const content = textarea.value.trim();
+        if (!content) {
+            alert('请先填写思考记录再保存！');
+            return;
+        }
+        const key = `math_task_${taskId}`;
+        localStorage.setItem(key, content);
+        alert(`✅ 任务${taskId}笔记已保存！`);
+    }
+
+    function captureTask(taskId) {
+        saveTask(taskId);
+        const taskEl = document.getElementById(`task${taskId}`);
+        html2canvas(taskEl, { scale: 2, useCORS: true }).then(canvas => {
+            const a = document.createElement('a');
+            a.download = `探究任务${taskId}_${new Date().getTime()}.png`;
+            a.href = canvas.toDataURL('image/png');
+            a.click();
+            alert(`📸 任务${taskId}截图已下载！`);
+        }).catch(() => alert('截图失败，请重试！'));
+    }
+
+    window.onload = function() {
+        document.getElementById('aiGenBtn').addEventListener('click', generateAITask);
+        // 初始化显示提示文字
+        document.getElementById('answer4').innerHTML = '📝 输入场景后点击「AI生成同类探究题」按钮，即可获得随机生成的探究题及解析';
+    };
+</script>
+</body>
+</html>
